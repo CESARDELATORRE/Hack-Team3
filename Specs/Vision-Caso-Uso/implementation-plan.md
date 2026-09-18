@@ -63,12 +63,34 @@ La arquitectura del POC se compone de 3 capas principales:
 
 ```mermaid
 flowchart LR
-    User[Huésped en móvil] --> Web[Vue SPA]
-    Web --> API[.NET API]
-    API --> Agent[Azure AI Foundry Agent]
-    Agent --> Catalog[Catálogo / disponibilidad]
-    API --> Orders[Backoffice pedidos de prueba]
-    API --> Logs[Logging / observabilidad]
+   User[Huésped en móvil] --> SPA[Vue SPA]
+
+   subgraph Client[Cliente y experiencia]
+      SPA --> Session[Estado y sesión local]
+      SPA --> Service[Capa de servicio frontend]
+   end
+
+   Service --> Agent[Azure AI Foundry Agent]
+   Agent --> Service
+
+   subgraph DataOps[Datos y operación del POC]
+      Rules[Catálogo y validaciones de negocio del POC]
+      Orders[Pedidos de prueba]
+      Backoffice[Backoffice demo]
+      Telemetry[Observabilidad y logging]
+      Rules --> Orders
+      Backoffice --> Orders
+   end
+
+   Service --> Rules
+   Service --> Telemetry
+
+   subgraph Future[Evolución futura opcional]
+      Proxy[Proxy / backend .NET]
+   end
+
+   Service -.->|si se requiere| Proxy
+   Proxy -.-> Agent
 ```
 
 ---
@@ -76,6 +98,7 @@ flowchart LR
 ## 4. Stack técnico recomendado
 
 ### Frontend
+
 - Vue 3
 - Vite
 - TypeScript
@@ -88,12 +111,14 @@ flowchart LR
 - Manejo de autenticación desde frontend si aplica (por ejemplo, Azure Identity con token de sesión o API key controlada por entorno)
 
 ### Azure AI Foundry
+
 - Endpoint configurado en Azure AI Foundry
 - Agente del restaurante asistente
 - URI base por consumición:
   https://agustinperez-resource.services.ai.azure.com/api/projects/agustinperez/agents/hackathon/endpoint/protocols/openai/responses
 
 ### Backend opcional (futuro, no incluido en la POC)
+
 - .NET 8 + ASP.NET Core Web API
 - Se considerará solo en una fase posterior, cuando el proyecto requiera una capa de validación de negocio, control de secretos más estricto o integración con sistemas operativos reales
 - No es requisito inicial para el MVP ni para la demo funcional del POC
@@ -134,6 +159,7 @@ https://agustinperez-resource.services.ai.azure.com/api/projects/agustinperez/ag
 ### 6.1 Frontend
 
 #### Módulos principales
+
 - Landing / acceso rápido
 - Conversación principal
 - Selector de idioma (ES / EN)
@@ -411,47 +437,53 @@ Cada producto debe tener la siguiente estructura mínima:
 
 ## 14. Riesgos y mitigaciones
 
-| Riesgo | Impacto | Mitigación |
-|--------|---------|------------|
+| Riesgo                               | Impacto                | Mitigación                                                                       |
+| ------------------------------------ | ---------------------- | -------------------------------------------------------------------------------- |
 | Catálogo incompleto o desactualizado | Recomendaciones falsas | Validación de F&B, filtrado por disponibilidad y revalidación antes de confirmar |
-| Respuesta del agente demasiado libre | Información no fiable | Validación del backend y reglas de negocio estrictas |
-| Latencia elevada | Poca usabilidad | Timeouts, caché y respuesta simplificada del agente |
-| Duplicación de pedidos | Confusión operativa | Idempotency key y revalidación antes de registrar |
-| Problemas con voz | Frustración | Fallback a texto y confirmación de lo entendido |
-| Datos sensibles en logs | Riesgo de privacidad | Redacción, masking y limitación del contenido logueado |
+| Respuesta del agente demasiado libre | Información no fiable  | Validación del backend y reglas de negocio estrictas                             |
+| Latencia elevada                     | Poca usabilidad        | Timeouts, caché y respuesta simplificada del agente                              |
+| Duplicación de pedidos               | Confusión operativa    | Idempotency key y revalidación antes de registrar                                |
+| Problemas con voz                    | Frustración            | Fallback a texto y confirmación de lo entendido                                  |
+| Datos sensibles en logs              | Riesgo de privacidad   | Redacción, masking y limitación del contenido logueado                           |
 
 ---
 
 ## 15. Tareas sugeridas por sprint / backlog
 
 ### Sprint 1 — Foundation
+
 - Configuración del repositorio y estructura del proyecto Vue
 - Definición del modelo de catálogo
 - Estructura del frontend para chat, resumen y backoffice
 - Configuración de entorno Azure y credenciales seguras
 
 ### Sprint 2 — Conversational layer
+
 - Chat UI
 - Estado de sesión
 - Cliente JavaScript para Azure AI Foundry
 - Manejo de respuestas y fallback
 
 ### Sprint 3 — Business rules
+
 - Validación de disponibilidad
 - Recomendación por presupuesto y restricciones
 - Derivación a personal
 
 ### Sprint 4 — Order and backoffice
+
 - Preview + confirm order
 - Persistencia del pedido en local o servicio ligero
 - Backoffice demo
 
 ### Sprint 5 — QA and demo readiness
+
 - Casos de prueba ES/EN
 - Correction pass
 - Performance tuning
 
 ### Fase opcional — Backend proxy
+
 - Si la autenticación del endpoint exige un canal no cliente
 - Implementación adicional en .NET para proxy y validación centralizada
 
@@ -495,9 +527,9 @@ Esto permite una entrega rápida, una clara separación de responsabilidades y u
 
 ## 19. Revision History
 
-| Date | Version | Author | Changes |
-|------|---------|--------|---------|
-| 2026-09-18 | 1.0 | Copilot | Initial implementation plan for Vue SPA + .NET + Azure AI Foundry restaurant assistant |
+| Date       | Version | Author  | Changes                                                                                |
+| ---------- | ------- | ------- | -------------------------------------------------------------------------------------- |
+| 2026-09-18 | 1.0     | Copilot | Initial implementation plan for Vue SPA + .NET + Azure AI Foundry restaurant assistant |
 
 ---
 
