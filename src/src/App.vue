@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 
 const endpoint = import.meta.env.VITE_FOUNDRY_ENDPOINT
 const apiKey = import.meta.env.VITE_FOUNDRY_API_KEY
-const model = import.meta.env.VITE_FOUNDRY_MODEL || 'gpt-4o-mini'
+const apiVersion = import.meta.env.VITE_FOUNDRY_API_VERSION || '2025-05-15-preview'
 
 const messages = ref([
   {
@@ -36,22 +36,24 @@ async function callFoundry(messageText) {
   }
 
   const payload = {
-    model,
     input: [
       {
+        type: 'message',
         role: 'system',
         content: formatSystemPrompt(),
       },
       {
+        type: 'message',
         role: 'user',
         content: messageText,
       },
     ],
-    temperature: 0.4,
-    max_output_tokens: 500,
   }
 
-  const response = await fetch(endpoint, {
+  const requestUrl = new URL(endpoint)
+  requestUrl.searchParams.set('api-version', apiVersion)
+
+  const response = await fetch(requestUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
