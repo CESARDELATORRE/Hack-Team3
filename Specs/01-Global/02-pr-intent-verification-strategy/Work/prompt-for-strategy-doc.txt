@@ -1,0 +1,29 @@
+
+
+---
+Analyze the doc pr-intent-verification-strategy.md and the whole repo in order to improve this propose prompt.
+Create a file at /Specs/final-prompt-for-strategy-doc.txt with your final prompt.
+
+
+---
+INITIAL PROMPT:
+
+
+I want to create a Feature Strategy document based on the backbone/directions in the "" document.
+
+Before reviewing/updating it to a much better version, deeply analize all the content of this repo, specs, customer-discovery docs and POCs implemented within .github.
+
+It's important to create several progressive versions/phases as stated in the doc.
+
+MAke sure this strategy doc is no longer than 10 pages.
+Include Mermaid diagrams for the alternatives and for the solution's phases.
+
+MAke it simpe, this is a strategy doc, not an implementation doc. IT should be easy to understand by executives and LT. The target is not about developers but decission makers of this project/solution.
+
+You need to re-write the whole document but following my directions in the current doc. Anything that says "TBD by Copilot " or similar, needs to be expanded by you, but feel free to review/improve/update the whole document.
+
+Only, if adding additional features/phases from the repo's context and other docs such as the customer-discovery, ask me first in this chat before adding each new aspect/feature/phase.
+
+Be critic, question anything, ask me anything that might not be consistent. My directions in the current doc is what I initially think, but it could be changed if you provide strong opinions and reasons.
+
+Deeply analyze the whole repo before starting.

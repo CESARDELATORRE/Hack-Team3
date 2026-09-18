@@ -1,0 +1,383 @@
+================================================================================
+FINAL PROMPT — REWRITE THE PR INTENT VERIFICATION STRATEGY DOC
+Target model: Claude Opus 4.7 (Extra high reasoning)
+Repo: pr-intent-verifications
+================================================================================
+
+# ROLE
+You are a senior product strategist preparing a Feature Strategy document for
+executives and the leadership team (LT) of the PR Intent Verifications
+initiative. Your reader is a decision-maker, not an engineer. They want
+clarity, trade-offs, phasing, and a confident POV — not implementation detail.
+
+You work in the repo `pr-intent-verifications`. Use the file paths exactly as
+given below. Use forward slashes in the document; the repo is cross-platform.
+
+# OBJECTIVE
+Re-write the Feature Strategy document from a barebones outline into a polished,
+executive-ready strategy doc (≤10 pages), preserving (or improving) the author's directional
+intent while filling every `TBD by Copilot` (or similar) placeholder with
+substantive content and improving the document end-to-end.
+
+This is a STRATEGY doc, not an implementation doc. No API shapes, no agent
+prompts, no code, no folder layouts, no acronym soup.
+
+PHASE-WEIGHTING IS CRITICAL: the doc must be heavily weighted toward Phase 1
+(v1). Phase 1 is what we are committing to and what the LT is being asked to
+back. Phase 2 and Phase 3 are lightly-defined PROPOSALS, explicitly framed as
+"to be revisited and decided once v1 is in production and working
+satisfactorily". Do not over-design them. 
+Roughly: 
+- A. ~45% of the document's
+substance should be about the context/vision/problems-to-solve and the Context, the Alternatives comparison, Concerns, alternatives considered, challenges, etc.,  
+- B. Then 40% about Phase 1; 
+- C. ~15% should cover Phase 2 + Phase 3 + Phase X 
+combined. If you
+find yourself writing detailed scoping for Phase 2 or Phase 3, you are off
+target — pull back and turn it into a one-paragraph proposal.
+
+# INPUTS — READ ALL OF THESE IN FULL BEFORE WRITING
+
+Primary source (the backbone you MUST follow directionally):
+- Specs/pr-intent-verification-strategy (Barebones-Directions).md
+
+Current draft (a near-duplicate of the Barebones doc — safe to overwrite):
+- Specs/pr-intent-verification-strategy.md
+
+Strategic context you MUST be consistent with (the existing POV across the repo) but be critic. Anything can be changed if you provide strong enough opinions:
+- Specs/pr-intent-specs-umbrella-plan.md
+    (This is the umbrella POV — it already names 5 proposed new sibling specs
+    #P, #C, #D, #A, #B and ranks them by customer-signal strength. Treat this
+    as the canonical menu of Phase 2 / Phase 3 candidates. Do NOT invent
+    parallel phases from raw customer interviews.)
+- Specs/pr-intent-customer-discovery-coverage-analysis.md
+    (The coverage matrix: which P/S/SR signals are already covered, partially
+    covered, or not covered. Use this to ground claims about gaps.)
+
+Supporting specs (the two existing v1 specs the Phase-1 bet is built on):
+- Specs/pr-intent-verifier-agent/pr-intent-verifier-agent-specs.md
+- Specs/pr-intent-verification-workflow/pr-intent-verification-workflow-design.md
+- Specs/pr-intent-verification-workflow/intent-verification-report-pr-intent-verification-workflow-design-Run1.md
+
+Customer discovery (the raw signal — large; skim deeply, prefer the SR/P/S
+indices over re-reading every interview verbatim):
+- Customer-Discovery/customer-interviews.md
+- Customer-Discovery/pr-intent-validation-customer-discovery-analysis.md
+(The .docx in this folder is a binary duplicate of the .md — skip it.)
+
+POCs already implemented (use these to ground the four alternatives concretely;
+each alternative maps to one or two of these POC files):
+- .github/agents/pr-intent-verifier.agent.md
+    -> POC of the single-verifier-agent alternative (Alt #1 local / Alt #2 cloud)
+- .github/agents/pr-intent-resolution-coordinator.agent.md
+    -> POC of the orchestrated workflow alternative (Alt #3 local / Alt #4 cloud)
+- .github/agents/co-dev.agent.md, coder.agent.md, critic.agent.md,
+  pm.agent.md, researcher.agent.md
+    -> the worker spokes the coordinator dispatches to
+- .github/skills/intent-verification/SKILL.md
+    -> the methodology the verifier uses (6 dimensions, 8 triggers, schema)
+- .github/skills/   (browse the rest as needed for context only)
+
+# OUTPUT
+Overwrite this file with the final strategy doc:
+- Specs/pr-intent-verification-strategy.md
+
+Do NOT create new files. Do NOT modify any other file in the repo unless I
+approve it in chat first. Do NOT touch the Barebones doc — it is the source.
+
+# AUDIENCE & TONE
+- Audience: Executives, LT, and project decision-makers. NOT developers.
+- Tone: Confident, concise, opinionated. Lead with the "so what". Avoid jargon;
+  when a technical term is unavoidable, define it once in plain language the
+  first time it appears.
+- Active voice. Short paragraphs (≤4 sentences). Bullets where they aid
+  scanning — but not bullet-soup; keep narrative flow.
+- Do not write in marketing voice ("world-class", "best-in-class",
+  "synergies"). Do not hedge everywhere ("might possibly help in some
+  scenarios"). Pick a side and defend it briefly.
+
+# HARD CONSTRAINTS
+- Length: ≤10 printed pages. Treat this as ~4,500–6,000 words in the markdown
+  source, INCLUDING diagrams. If you exceed it, cut — do not shrink anything.
+- Mermaid diagrams: at least the two required below; at most four total.
+  Every diagram must earn its place.
+- Preserve the author's directional choices from the Barebones doc UNLESS you
+  raise a concern in chat first and I approve a change. Strong opinions are
+  welcome — silent overrides and silent compliance are both wrong.
+- Do NOT invent: features, phases, customer quotes, percentages, latency
+  numbers, loop counts beyond what the Barebones doc explicitly says
+  (3 min / 5 max), dates, timelines, owners, team names not already in the
+  source docs, or success metrics. If you need a number you don't have,
+  describe the property qualitatively (e.g., "fewer loops", "lower end-to-end
+  time") rather than fabricating a value.
+- Do NOT focus on owners or dates anywhere in the doc. Phasing is sequence,
+  not schedule.
+- Do NOT propose numeric KPIs. Success criteria for Phase 1 must be
+  qualitative ("the loop converges in a small number of iterations with the
+  developer in control", not "≥80% convergence in ≤3 loops").
+
+# VOCABULARY — USE THESE TERMS CONSISTENTLY
+The rest of the repo uses a specific vocabulary. Your strategy doc must match
+it so an exec reading both this doc and the umbrella plan does not see
+contradictions:
+
+- "intent docs" = specs, architecture docs, implementation/task plans, ADO
+  Epics, GitHub Issues — any human-readable definition of what the code is
+  supposed to do.
+- "drift" = the gap between intent docs and the actual code; can go in two
+  directions: code BEHIND intent (under-implemented) or code AHEAD of intent
+  (implemented but undocumented). Use BEHIND / AHEAD (not "beyond").
+- "candidate changeset" = a working branch + a statement of intent, from the
+  moment a dev/agent starts editing through local edits, pushed branch, draft
+  PR, and open PR. Use this when you need to refer to "the thing being
+  verified" across local-and-cloud.
+- "verifier" = the single-pass intent-verification agent (Alternative #1/#2).
+- "workflow" / "resolution loop" = the orchestrated hub-and-spoke loop with
+  a coordinator + verifier + Co-Dev + PM (Alternative #3/#4).
+- "local-first" = the project's doctrinal commitment to ship as
+  agents/skills/CLI usable from any host, with hosted-service integrations as
+  later adoption surfaces.
+- Doctrine D1 = discrete per-check evals over one mega-prompt.
+  Doctrine D2 = iterative loop over single-pass.
+  Doctrine D3 = deterministic work outside the LLM where possible.
+  (Reference these by name if it helps the exec see the "why" behind a choice;
+  do not list all three in a bullet list — weave them into prose.)
+
+If you choose to use a customer-signal code (P*, S*, SR*) anywhere, define it
+inline the first time. Prefer plain-English phrasings for the exec audience.
+
+# DIAGRAMS (Mermaid) — REQUIRED
+
+1. ALTERNATIVES DIAGRAM (in section "Alternatives Considered"):
+   Render the four alternatives as a 2×2 on the two axes that actually matter:
+     - X axis: WHERE the work runs — Local (developer machine) vs Cloud
+       (ADO / GitHub service).
+     - Y axis: WHAT runs — Single Verifier Agent (report only) vs
+       Orchestrated Workflow (verifier + coordinator + workers).
+   Place each alternative in its quadrant. Mark the Phase-1 bet visually
+   (e.g., a highlight or a star). Use `quadrantChart` if it renders the four
+   labels cleanly; otherwise a labeled `flowchart` arranged as a 2×2 is
+   acceptable. Keep node labels to ≤6 words.
+
+2. PHASED ROADMAP DIAGRAM (in section "The Solution"):
+   Show Phase 1 → Phase 2 → Phase 3 with what ships in each phase and how
+   they compose. Use `flowchart LR` or `timeline`. Keep ≤8 nodes total.
+   Phase 1 must be the visually-dominant element (e.g., the largest node,
+   a highlight color, or in the center). Phase 2 nodes should be visibly
+   lighter / dashed / labeled "proposal — revisit after v1". Phase 3 should
+   be a single faint "horizon" node. The diagram itself must communicate the
+   commitment asymmetry: Phase 1 is what we are building; Phase 2/3 are open
+   proposals.
+
+3. OPTIONAL — END-TO-END LOOP DIAGRAM (only if it adds clarity beyond prose):
+   A simple flow showing the human-in-the-loop cycle:
+     intent docs ↔ code ↔ verifier ↔ human ↔ workers ↔ re-verify.
+   Skip it if prose carries the point. Do not exceed 8 nodes if you include it.
+
+Anti-pattern to avoid: diagrams that just visualize a bullet list. Diagrams
+must show structure, comparison, or flow — not duplicate the text.
+
+# REQUIRED DOCUMENT STRUCTURE
+Use these top-level sections in this order. Suggested length per section is a
+budget, not a target — be tight.
+
+1. Executive Summary  (≤250 words; the doc on one page; lead with the bet).
+   The summary must make the commitment asymmetry explicit in one sentence:
+   Phase 1 is what we are building and asking the LT to back; Phase 2 and
+   Phase 3 are early proposals to be revisited after v1 is working in
+   production.
+2. Context & Problem  (≤500 words; what hurts today, why it matters now;
+   make the latency-of-loops point central — this is the headline pain)
+3. What is Intent Verification  (≤200 words; one-paragraph plain-English
+   definition + a short list of what counts as "intent docs")
+4. Strategic Context & North Star  (≤400 words)
+   4a. Strategic Challenge — the dual tension: (i) detecting drift accurately
+       and (ii) closing it through human-in-the-loop cycles WITHOUT killing
+       end-to-end time.
+   4b. North Star — the WHY and high-level GOALS only. No solutions here.
+5. Alternatives Considered  (≤900 words + the 2×2 diagram)
+   The four alternatives from the Barebones doc, each with: 1-line definition,
+   key strength, key weakness, POC reference (one file path is enough).
+   Close with one paragraph naming which alternative(s) the project bets on
+   and why.
+6. The Solution — Phased Approach  (≤1,800 words total + the roadmap diagram)
+   This section is the heart of the doc. Phase 1 must dominate it.
+
+   - Phase 1 (v1.0)  — THE HEADLINE BET (≤1,300 words; this is the majority of
+     the section and a substantial share of the whole doc).
+     Per Barebones direction, the default is Alternative #3 (local
+     orchestrated workflow) as the primary loop, plus Alternative #2
+     (single verifier in the cloud) as a complementary final check on the
+     real PR. Confirm or push back in chat BEFORE writing.
+     For Phase 1, cover in depth:
+       (a) What ships in v1 — the local orchestrated loop and the cloud
+           verifier as complement, described at exec altitude.
+       (b) Why this combination — the case for local-first iteration plus a
+           cloud safety net, grounded in the loop-latency argument.
+       (c) How the human stays in the loop — at what gates, with what kind
+           of decisions, and why that human-in-the-loop placement matters.
+       (d) What "good" looks like for Phase 1 (cross-references Success
+           Criteria in section 8).
+       (e) What is explicitly OUT of Phase 1 (preempt scope creep).
+       (f) The 2–3 risks specific to Phase 1 execution (brief — full risk
+           treatment is in section 7).
+
+   - Phase 2  — LIGHT PROPOSAL (≤300 words; one short paragraph per item).
+     Name AT MOST 2 complementary capabilities drawn from the umbrella plan's
+     proposed sibling specs (#P, #C, #D, #A, #B). For each, one short
+     paragraph: what it adds, why it likely matters, signal strength. Frame
+     the entire Phase 2 sub-section explicitly as: "These are PROPOSALS to be
+     re-evaluated once Phase 1 is in production and working satisfactorily.
+     Selection and scope will be decided then, with fresh signal from v1
+     usage." Apply the GATING RULE below for any additions beyond the
+     umbrella plan menu.
+
+   - Phase 3  — HORIZON ONLY (≤150 words total; 1–2 future bets).
+     Name 1–2 future bets at most. One sentence each on what they unlock and
+     one sentence each on what blocks them today. Explicitly tag this as
+     "horizon-level — not on the current commitment path".
+7. Concerns, Risks & Open Questions  (≤500 words)
+   At minimum surface these (drawn from the Barebones doc and umbrella plan):
+   - The "intent-doc parity" risk — the same intent docs must be used locally
+     and verified later in the cloud; how do we guarantee that?
+   - The "honest scoping" risk — drift is not universal; the platform is for
+     AI-PR-heavy teams. Don't oversell to mechanical-PR teams.
+   - The "fine-grained noise" risk — verification reports can be flooded with
+     low-priority differences; significance filtering is essential.
+   - The "loops in the cloud" risk — why pushing the workflow to the
+     cloud/service before it is polished locally is premature.
+8. Success Criteria for Phase 1  (≤400 words; qualitative only; describe what
+   "good" looks like, not how we measure it). This section ONLY covers Phase 1
+   — do not write success criteria for Phase 2 or Phase 3; those will be
+   defined when those phases are revisited.
+9. Appendix (optional, counts toward page budget): glossary of the vocabulary
+   above, plus a short reference list of the source specs and POCs.
+
+If you believe a section should be added, removed, merged, or reordered,
+raise it in chat first.
+
+# GATING RULE — STOP AND ASK ME IN CHAT
+Before writing the final file, you MUST pause and ask me in chat whenever any
+of the following is true. Ask ONE focused question per turn; do not batch.
+
+A. You want to ADD a feature, phase, alternative, or capability that is not
+   already in the Barebones doc OR the umbrella plan. Even Customer-Discovery
+   items must come up through me first.
+B. You found an inconsistency, contradiction, or factual gap across the
+   source docs that materially affects the strategy.
+C. The Barebones doc's direction seems weak or wrong and you want to propose
+   a stronger alternative. (Strong opinions are welcome — see "BE CRITICAL"
+   below — but route them through chat, not silently into the doc.)
+D. A `TBD by Copilot` placeholder is ambiguous and could be filled in
+   materially different ways.
+E. You are unsure whether a Customer-Discovery finding (signal-strength
+   single-voice vs 5/5) is "critical enough" to land in Phase 2 or Phase 3.
+
+Frame each question as:
+  (1) what you observed,
+  (2) your recommendation,
+  (3) the decision you need from me.
+Then wait for my answer before continuing.
+
+# BE CRITICAL (this is in addition to the gating rule)
+You are expected to challenge the Barebones doc. The author's directions are
+a starting point, not gospel. Two specific things to interrogate:
+
+- Alternative #1 ("single verifier agent running locally") — the Barebones
+  says this has the "multi-loop" problem. But the verifier is explicitly
+  single-pass by design (it "STOPS and recommends"). The multi-loop pain in
+  Alt #1 is the DEVELOPER manually re-running it, not the agent looping.
+  Decide how to frame that honestly for an exec; flag your framing in chat
+  before writing if you are unsure.
+
+- Phase-1 framing — the Barebones proposes "Alt #3 locally + Alt #2 in the
+  cloud, complementary". Before accepting this as the Phase-1 headline, sanity
+  check: does Alt #3 already do everything Alt #2 would do, just locally? Is
+  the cloud step a true complement or just a re-run? Surface your view in chat.
+
+Other strong opinions: bring them. But always through chat first.
+
+# WORKFLOW — FOLLOW THESE PHASES IN ORDER
+
+Phase 1 — Deep read (silent):
+  Read every file in INPUTS. Build a mental map of: the problem, the four
+  alternatives, the POCs, the customer signals, the umbrella plan's 5 proposed
+  sibling specs, and the author's stated POV.
+
+Phase 2 — Reasoning pass (visible in chat, ≤250 words):
+  Post a short "what I learned" summary covering:
+  - Your one-sentence framing of the core problem (drift + loop-latency).
+  - Your confidence in the Barebones Phase-1 recommendation (Alt #3 + Alt #2)
+    — this is the lion's share of the doc and must be solid.
+  - Your candidate shortlist of AT MOST 2 items for Phase 2 (drawn from
+    umbrella plan #P / #C / #D / #A / #B), each as a one-line proposal — NOT
+    a design. Remember: Phase 2 is light proposals, not commitments.
+  - Any inconsistencies, gaps, or sharp questions you spotted.
+  - The 1–2 places you intend to push back on the Barebones doc.
+
+Phase 3 — Critique & questions (visible in chat):
+  Raise GATING-RULE questions and "be critical" pushback. Ask one question
+  per turn. Wait for my answers. Do NOT proceed to writing until I tell you
+  to proceed.
+
+Phase 4 — Draft (write the file):
+  Write the full doc to Specs/pr-intent-verification-strategy.md, overwriting
+  the existing near-duplicate file. Honor every constraint above.
+
+Phase 5 — Self-review (visible in chat, ≤200 words):
+  After writing, post a self-review covering:
+  - Approximate word count and section-by-section budget adherence.
+  - Which Mermaid diagrams you included and what each one shows.
+  - Any constraint you bent or broke, and why.
+  - Top 3 things a reviewer might push back on, and your response to each.
+
+Phase 6 — Wait for my feedback before further edits.
+
+# QUALITY BAR (how I will judge the result)
+- An exec who reads only the Executive Summary understands the bet we are
+  making (Phase 1) and grasps that Phase 2/3 are proposals to revisit later.
+- An exec who reads the whole doc can defend the Phase-1 choice in a 5-minute
+  hallway conversation, including why the cloud step complements rather than
+  replaces the local loop.
+- The four alternatives are distinguishable at a single glance at the
+  2×2 diagram, and the Phase-1 bet is visually unmistakable.
+- Phase 1 is concrete and well-argued; Phase 2 reads clearly as "proposal,
+  revisit after v1"; Phase 3 reads clearly as "horizon".
+- The doc's center of gravity is unmistakably Phase 1. A reader cannot
+  mistake Phase 2 or Phase 3 for current commitments.
+- Every `TBD by Copilot` is gone, and the replacement reads like the author
+  wrote it — not like AI filler.
+- The doc is internally consistent with the umbrella plan's vocabulary and
+  POV. An exec reading both does not see contradictions.
+
+# ANTI-PATTERNS — AVOID
+- Over-specifying Phase 2 or Phase 3. They are proposals, not designs. If
+  Phase 2 reads like a roadmap with scope, dependencies, and rationale per
+  item, it is too detailed — collapse it.
+- A balanced "Phase 1 / Phase 2 / Phase 3" treatment that gives each phase
+  roughly equal real estate. Phase 1 must dominate. If your three
+  sub-sections look similar in length, you are off target.
+- Restating the Barebones doc in nicer words. Add insight or cut.
+- Hedge-everywhere language ("could potentially perhaps help in some
+  scenarios"). Pick a side.
+- Implementation detail: API shapes, file layouts, agent prompts, code,
+  YAML schemas, dimension counts (D1–D6), trigger counts (T1–T8).
+- Buzzwords without referents ("synergies", "best-in-class", "world-class",
+  "next-generation").
+- Inventing customer quotes, metrics, percentages, latency numbers, loop
+  counts beyond Barebones' 3-min/5-max, dates, owners.
+- Diagrams that visualize bullet lists.
+- More than 10 pages. Cut ruthlessly.
+- Mentioning specific organization names from customer interviews (PR
+  Lifecycle, ODSP, Talos, Outlook, OMR, etc.) unless absolutely necessary
+  to make a scoping point. The exec audience does not need that map.
+
+Again, be critic. anything in the current directions provided by me could be changed if you provide strong enough opinions.
+
+# START NOW
+Begin Phase 1 (silent deep read), then post your Phase 2 summary in chat.
+Do not write to the file until I tell you to start Phase 4.
+
+================================================================================
+END OF PROMPT
+================================================================================

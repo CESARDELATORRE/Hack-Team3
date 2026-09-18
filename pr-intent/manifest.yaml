@@ -1,0 +1,10 @@
+bundle: pr-intent
+bundle_version: v0.0.1
+released_on: "2026-06-12"
+artifacts:
+  - path: .github/agents/pr-intent-verifier.agent.md
+    artifact_version: v0.0.1
+  - path: .github/agents/pr-intent-resolution-coordinator.agent.md
+    artifact_version: v0.0.1
+  - path: .github/skills/intent-verification/SKILL.md
+    artifact_version: v0.0.1
